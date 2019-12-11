@@ -17,6 +17,7 @@ public class DroolsBeanFactory {
 
 
     public KieSession getKieSession(Resource dt) {
+
         KieFileSystem kieFileSystem = kieServices.newKieFileSystem()
             .write(dt);
 
@@ -47,6 +48,8 @@ public class DroolsBeanFactory {
         DecisionTableProviderImpl decisionTableProvider = new DecisionTableProviderImpl();
 
         String drl = decisionTableProvider.loadFromResource(dt, null);
+
+        System.out.println("HERE \n" + drl);
 
         return drl;
     }

@@ -1,0 +1,14 @@
+package net.cloudburo.drools;
+//generated from Decision Table
+import net.cloudburo.drools.Journey;
+import net.cloudburo.drools.Location;
+import net.cloudburo.drools.Markup;
+import net.cloudburo.drools.MarkupType;
+global net.cloudburo.drools.Markup markup;
+// rule values at A11, header at A6
+rule "first_rule_on_markup"
+	when
+		$journey:Journey($journey.getDeptLocation().getCountryCode().equals("GB"))
+	then
+		markup.setValue(10);
+end

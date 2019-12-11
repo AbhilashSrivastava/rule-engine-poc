@@ -27,3 +27,6 @@ hs_err_pid*
 .gitignore
 .idea/workspace.xml
 target/
+
+.idea/compiler.xml
+*.iml
