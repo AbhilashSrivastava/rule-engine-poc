@@ -26,11 +26,31 @@ public class MarkupDecisionTableTest {
     }
 
     @Test
-    public void giveIndvidualLongStanding_whenFireRule_thenCorrectDiscount() throws Exception {
+    public void shouldMarkupWhenDepartureLocationMatchesRule() throws Exception {
 
         Journey journey = Journey.builder()
             .deptLocation(Location.builder()
                 .countryCode("GB")
+                .build())
+            .arrLocation(Location.builder()
+                .countryCode("DE")
+                .build())
+            .build();
+        kSession.insert(journey);
+
+        Markup markup = Markup.builder().build();
+        kSession.setGlobal("markup", markup);
+        kSession.fireAllRules();
+
+        assertEquals("10", markup.getValue() );
+    }
+
+    @Test
+    public void shouldMarkupWhenArrivalLocationMatchesRule() throws Exception {
+
+        Journey journey = Journey.builder()
+            .deptLocation(Location.builder()
+                .countryCode("DE")
                 .build())
             .arrLocation(Location.builder()
                 .countryCode("FR")
@@ -42,8 +62,27 @@ public class MarkupDecisionTableTest {
         kSession.setGlobal("markup", markup);
         kSession.fireAllRules();
 
-        assertEquals(markup.getValue(), "10");
-//        assertEquals(markup.getType(), MarkupType.PERCENTAGE);
+        assertEquals("20",markup.getValue());
+    }
+
+    @Test
+    public void shouldNotMarkupWhenLocationsDontMatcheRule() throws Exception {
+
+        Journey journey = Journey.builder()
+            .deptLocation(Location.builder()
+                .countryCode("DE")
+                .build())
+            .arrLocation(Location.builder()
+                .countryCode("ES")
+                .build())
+            .build();
+        kSession.insert(journey);
+
+        Markup markup = Markup.builder().build();
+        kSession.setGlobal("markup", markup);
+        kSession.fireAllRules();
+
+        assertEquals(null, markup.getValue());
     }
 
 
