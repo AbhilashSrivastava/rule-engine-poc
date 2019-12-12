@@ -30,4 +30,6 @@ target/
 
 .idea/compiler.xml
 
+.idea/*
+
 *.iml
