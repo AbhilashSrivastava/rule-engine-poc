@@ -8,11 +8,14 @@ import net.cloudburo.drools.config.DroolsBeanFactory;
 import net.cloudburo.drools.model2.Journey;
 import net.cloudburo.drools.model2.Location;
 import net.cloudburo.drools.model2.Markup;
+import net.cloudburo.drools.model2.MarkupType;
 import org.junit.Before;
 import org.junit.Test;
 import org.kie.api.KieServices;
 import org.kie.api.io.Resource;
+import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.StatelessKieSession;
 import org.kie.internal.io.ResourceFactory;
 
 public class MarkupAgendaTest {
@@ -51,6 +54,24 @@ public class MarkupAgendaTest {
         System.out.println("the{}"+kSession.getGlobals());
 
         assertEquals(null, markup.getValue() );
+    }
+
+    @Test
+    public void testSessionExists() {
+        Markup markup1 = Markup.builder().build();
+        kSession.setGlobal("markup", markup1);
+        kSession.fireAllRules();
+        if(kSession != null) {
+            kSession.dispose();
+            KieServices kieServices = KieServices.Factory.get();
+            KieContainer kContainer = kieServices.getKieClasspathContainer();
+            StatelessKieSession kSession = kContainer.newStatelessKieSession("kSession");
+            Markup markup2 = Markup.builder().type(MarkupType.FIXED)
+                .value("15").build();
+            kSession.execute(markup2);
+            assertEquals("15", markup2.getValue() );
+
+        };
     }
 
     @Test
